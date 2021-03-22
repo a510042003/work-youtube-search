@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const key = 'AIzaSyCittnFfOvAJD17eVYd8DPcfszDo6vFABE';
+const key = 'YOUR_API_KEY';
 const limit = 24;
 export const getYoutubeList = (searchText, pageToken) => {
 	return axios.get('https://youtube.googleapis.com/youtube/v3/search', {

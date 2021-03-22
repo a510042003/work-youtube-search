@@ -18,7 +18,7 @@ export const getList = (isReset) => async (dispatch, getState) => {
 		dispatch({
 			type: 'TOGGLE_LOADING'
 		});
-		const { data } = await getYoutubeList(searchText, pageInfo.anchor);
+		const { data } = await getYoutubeList(searchText, isReset ? null : pageInfo.anchor);
 
 		array.push(...data.items.map((el) => getModel(el)));
 		dispatch({
