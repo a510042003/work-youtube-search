@@ -1,3 +1,51 @@
 .App {
 	width: 100vw;
+	max-width: 1200;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.card {
+	width: 300px;
+	margin: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+	.card {
+		width: 140px;
+		margin: 5px;
+	}
+}
+
+.input {
+	width: 300px;
+	margin-top: 20px;
+}
+
+.result-container {
+	display: flex;
+	flex-wrap: wrap;
+	padding: 20px;
+	width: 100%;
+	justify-content: center;
+}
+
+@media only screen and (max-width: 600px) {
+	.result-container {
+		padding: 5px;
+	}
+}
+
+.footer {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	overflow: scroll;
+	padding: 20px;
+}
+
+.footer-item {
+	display: flex;
+	padding: 0px 20px 0px 100px;
 }

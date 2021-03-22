@@ -5,7 +5,8 @@ const initialState = {
 		currentPage: 1,
 		anchor: null,
 		totalPage: 1
-	}
+	},
+	loading: false
 };
 
 const Reducer = (state = initialState, action) => {
@@ -16,6 +17,8 @@ const Reducer = (state = initialState, action) => {
 			return { ...state, searchResult: action.result };
 		case 'SET_PAGEINFO':
 			return { ...state, pageInfo: action.pageInfo };
+		case 'TOGGLE_LOADING':
+			return { ...state, loading: !state.loading };
 		default:
 			return state;
 	}

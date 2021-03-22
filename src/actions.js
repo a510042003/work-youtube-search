@@ -14,24 +14,35 @@ export const getList = (isReset) => async (dispatch, getState) => {
 	if (!isReset) {
 		array.push(...searchResult);
 	}
+	try {
+		dispatch({
+			type: 'TOGGLE_LOADING'
+		});
+		const { data } = await getYoutubeList(searchText, pageInfo.anchor);
 
-	const { data } = await getYoutubeList(searchText, pageInfo.anchor);
-
-	array.push(...data.items.map((el) => getModel(el)));
-	dispatch({
-		type: 'SET_RESULT',
-		result: array
-	});
-	const newPage = {
-		...pageInfo,
-		totalPage: isReset ? 1 : pageInfo.currentPage,
-		currentPage: isReset ? 1 : pageInfo.currentPage,
-		anchor: data.nextPageToken
-	};
-	dispatch({
-		type: 'SET_PAGEINFO',
-		pageInfo: newPage
-	});
+		array.push(...data.items.map((el) => getModel(el)));
+		dispatch({
+			type: 'SET_RESULT',
+			result: array
+		});
+		const newPage = {
+			...pageInfo,
+			totalPage: isReset ? 1 : pageInfo.currentPage,
+			currentPage: isReset ? 1 : pageInfo.currentPage,
+			anchor: data.nextPageToken
+		};
+		dispatch({
+			type: 'SET_PAGEINFO',
+			pageInfo: newPage
+		});
+		dispatch({
+			type: 'TOGGLE_LOADING'
+		});
+	} catch (err) {
+		dispatch({
+			type: 'TOGGLE_LOADING'
+		});
+	}
 };
 
 export const changeResultPage = (page) => async (dispatch, getState) => {

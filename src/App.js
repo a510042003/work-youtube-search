@@ -6,47 +6,25 @@ import { changeText, getList, changeResultPage } from './actions';
 import { Input, Card, Button } from 'antd';
 const { Meta } = Card;
 const { Search } = Input;
-const App = ({
-	searchText,
-	changeText,
-	searchResult,
-	openVideo,
-	getResult,
-	totalPage,
-	changePage,
-	hasLastPage,
-	currentPage
-}) => {
-	// useEffect(() => {
-
-	// 	getResult(true);
-	// }, []);
-
-	const pager = Array.from(Array(totalPage + 1).keys());
-	pager.shift();
-	if (hasLastPage) {
-		pager.push(totalPage + 1);
-	}
-
-	console.log(pager);
-
+const App = ({ searchText, changeText, searchResult, openVideo, getResult, changePage, currentPage, pager }) => {
 	return (
 		<div className="App">
 			<Search
-				placeholder="input search text"
+				placeholder="請輸入開始搜尋"
 				onSearch={getResult}
+				className="input"
 				enterButton
 				value={searchText}
 				onChange={(e) => {
 					changeText(e.target.value);
 				}}
 			/>
-			<div style={{ display: 'flex', flexWrap: 'wrap', padding: 20, width: '100%' }}>
+			<div className="result-container">
 				{searchResult.map((el) => (
 					<Card
 						key={el.id}
 						hoverable
-						style={{ width: 100 }}
+						className="card"
 						cover={
 							<img
 								alt="avatar"
@@ -61,19 +39,21 @@ const App = ({
 					</Card>
 				))}
 			</div>
-			<div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-				{pager.map((el) => (
-					<Button
-						disabled={el === currentPage}
-						key={`${el}`}
-						style={{ marginTop: 8, marginRight: 4 }}
-						onClick={() => {
-							changePage(el);
-						}}
-					>
-						{el}
-					</Button>
-				))}
+			<div className="footer">
+				<div className="footer-item">
+					{pager.map((el) => (
+						<Button
+							disabled={el === currentPage}
+							key={`${el}`}
+							style={{ marginTop: 8, marginRight: 4 }}
+							onClick={() => {
+								changePage(el);
+							}}
+						>
+							{el}
+						</Button>
+					))}
+				</div>
 			</div>
 		</div>
 	);
@@ -81,12 +61,21 @@ const App = ({
 
 const mapStateToProps = (state) => {
 	const { totalPage, currentPage, anchor } = state.pageInfo;
+	const pager = Array.from(Array(totalPage + 1).keys());
+	pager.shift();
+
+	const searchResult = state.searchResult.slice((currentPage - 1) * 24, currentPage * 24);
+	if (searchResult.length === 0) {
+		pager.shift();
+	}
+	if (!!anchor) {
+		pager.push(totalPage + 1);
+	}
 	return {
 		searchText: state.searchText,
-		searchResult: state.searchResult.slice((currentPage - 1) * 24, currentPage * 24),
-		totalPage,
+		searchResult,
 		currentPage,
-		hasLastPage: !!anchor
+		pager: state.loading ? [] : pager
 	};
 };
 
