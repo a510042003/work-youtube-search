@@ -8,11 +8,42 @@ export const changeText = (text) => ({
 	text: text
 });
 
-export const getList = () => async (dispatch) => {
-	const { data } = await getYoutubeList();
-	console.log(data);
+export const getList = (isReset) => async (dispatch, getState) => {
+	const { searchText, searchResult, pageInfo } = getState();
+	const array = [];
+	if (!isReset) {
+		array.push(...searchResult);
+	}
+
+	const { data } = await getYoutubeList(searchText, pageInfo.anchor);
+
+	array.push(...data.items.map((el) => getModel(el)));
 	dispatch({
 		type: 'SET_RESULT',
-		result: data.items.map((el) => getModel(el))
+		result: array
 	});
+	const newPage = {
+		...pageInfo,
+		totalPage: isReset ? 1 : pageInfo.currentPage,
+		currentPage: isReset ? 1 : pageInfo.currentPage,
+		anchor: data.nextPageToken
+	};
+	dispatch({
+		type: 'SET_PAGEINFO',
+		pageInfo: newPage
+	});
+};
+
+export const changeResultPage = (page) => async (dispatch, getState) => {
+	const { pageInfo } = getState();
+	dispatch({
+		type: 'SET_PAGEINFO',
+		pageInfo: {
+			...pageInfo,
+			currentPage: page
+		}
+	});
+	if (page > pageInfo.totalPage) {
+		dispatch(getList());
+	}
 };

@@ -1,14 +1,16 @@
 import axios from 'axios';
 
-const key = 'AIzaSyD4FlrD7730Qinq88GpKCQFxZvh3tUFm2s';
+const key = 'AIzaSyCittnFfOvAJD17eVYd8DPcfszDo6vFABE';
 const limit = 24;
-export const getYoutubeList = () => {
+export const getYoutubeList = (searchText, pageToken) => {
 	return axios.get('https://youtube.googleapis.com/youtube/v3/search', {
 		params: {
 			key,
 			part: 'snippet',
+			type: 'video',
 			maxResults: limit,
-			q: '熱門實況'
+			pageToken,
+			q: searchText
 		}
 	});
 };
